@@ -4,8 +4,8 @@
     <title>Download CSV</title>
 </head>
 <body>
-    <h1>Download Combined CSV File</h1>
-    <p>Click the button below to generate and download the combined CSV file.</p>
+    <h1>Download CSV File</h1>
+    <p>Click the button below to generate and download the CSV file.</p>
     <form method="post" action="{% url 'generate_and_download_csv' %}">
         {% csrf_token %}
         <label for="tuesday">Id</label>

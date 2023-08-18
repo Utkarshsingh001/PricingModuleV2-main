@@ -409,6 +409,6 @@ def download_page(request):
     return render(request, 'authentication/download.html')
 
 def column_selection(request):
-    fields = [field for field in Pricing_Module._meta.get_fields() if field.is_relation and not field.auto_created]
-    print(fields)
-    return render(request, 'authentication/column_selection.html', {'fields': fields})
+    fields = [field for field in Pricing_Module._meta.get_fields() if not field.is_relation]
+    
+    return render(request, 'authentication/column_selection.html', {'columns': fields})

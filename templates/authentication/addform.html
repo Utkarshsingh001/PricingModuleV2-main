@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Pricing Module</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="checkbox"]{
+            width: 10%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .weekday{
+            display:flex;flex-direction: row;align-items: center;text-align: center;
+        }
+        .box{
+            display: flex;flex-direction: row;align-items: center;text-align: center;justify-content:space-between;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Pricing Module</h2>
+
+        <form action="/addform" method="POST">
+            {% csrf_token %}
+            <div class="box">
+                <div class="form-group">
+                    <label for="dbp_price">Distance Base Price (₹)</label>
+                    <input type="text" id="dbp_price" name="dbp_price" placeholder="Distance Base Price" Required>
+                </div>
+                <div class="form-group">
+                    <label for="name2"> Upto Base Distance (km)</label>
+                    <input type="text" id="dbp_km" name="dbp_km" placeholder="Upto Base Distance" Required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Days of the Week:</label>
+                <br><br>
+                <div class="weekday">
+                    <input type="checkbox" id="monday" name="option" value="Monday">
+                    <label for="monday">Monday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="tuesday" name="option" value="Tuesday">
+                    <label for="tuesday">Tuesday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="wednesday" name="option" value="Wednesday">
+                    <label for="wednesday">Wednesday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="thursday" name="option" value="Thursday">
+                    <label for="thursday">Thursday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="friday" name="option" value="Friday">
+                    <label for="friday">Friday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="saturday" name="option" value="Saturday">
+                    <label for="saturday">Saturday</label>
+                </div>
+                <div class="weekday">
+                    <input type="checkbox" id="sunday" name="option" value="Sunday">
+                    <label for="sunday">Sunday</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name3">Distance Additional Price(₹)</label>
+                <input type="text" id="dap" name="dap" placeholder="Distance Additional Price" Required>
+            </div>
+            <div id="formContainer">
+                <div class="form-group">
+                    <div class="input-pair">
+                        <label for="TMF" style="display: block;">Time Multiplier Factor</label>
+                        <input type="text" name="time[]" placeholder="Time" Required>
+                        <input type="text" name="factor[]" placeholder="Factor" Required>
+                        <button type="button" onclick="deleteInputPair(this)">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addInputPair()">Add More</button>
+            <div class="form-group">
+                <label for="waitingCharge">Waiting Charge (₹)</label>
+                <input type="text" id="waiting_charge" name="waiting_charge" placeholder="Waiting Charge" Required>
+            </div>
+            <div class="form-group">
+                <label for="name5">After Waiting Time (min)</label>
+                <input type="text" id="waiting_time" name="waiting_time" placeholder="After Waiting Time" Required>
+            </div>
+            
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function addInputPair() {
+            const formContainer = document.getElementById('formContainer');
+            const newFormGroup = document.createElement('div');
+            newFormGroup.className = 'form-group';
+            newFormGroup.innerHTML = `
+                <div class="input-pair">
+                    <input type="text" name="time[]" placeholder="Time" Required>
+                    <input type="text" name="factor[]" placeholder="Factor" Required>
+                    <button type="button" onclick="deleteInputPair(this)">Delete</button>
+                </div>
+            `;
+            formContainer.appendChild(newFormGroup);
+        }
+
+        function deleteInputPair(button) {
+            const formGroup = button.parentElement.parentElement;
+            formGroup.remove();
+        }
+    </script>
+</body>
+</html>

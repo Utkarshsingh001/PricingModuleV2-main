@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmation Form</title>
+</head>
+<body>
+
+<h2>Confirmation Form</h2>
+
+<p>Are you sure you want to proceed?</p>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    
+    <button type="submit" name="confirmation" value="yes">Yes</button>
+    <button type="submit" name="confirmation" value="no">No</button>
+</form>
+
+</body>
+</html>

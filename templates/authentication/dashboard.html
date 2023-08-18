@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Table with Popups and Add Rows</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .edit-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>DBP (Distance Base price) (₹)</th>
+                    <th>till Base Distance (km)</th>
+                    <th>Day Of Week (DOW)</th>
+                    <th>Distance Additional Price (DAP)(₹)</th>
+                    <th>The Multiplier Factor (TMF)</th>
+                    <th>Waiting Time(WT)(mins)</th>
+                    <th>Waiting Charge (WC)(₹)</th>
+                    <th>Status</th>
+                    <th>Last Modified by</th>
+                    <th>Last Modified at</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                
+                {% for key,inner_dict in fullobj.items  %}
+                
+
+                <tr>
+                <td>{{inner_dict.dbp_price}}</td>
+                <td>{{inner_dict.dbp_km}}</td>
+                    <td>{{inner_dict.weekdays}}</td>
+                    <td>{{inner_dict.dap}}</td>
+                    <td>{{inner_dict.TMF}}</td>
+                    <td>{{inner_dict.waiting_time}}</td>
+                    <td>{{inner_dict.waiting_charge}}</td>
+                    <td style="color: green;">{{inner_dict.status}}</td>
+                    <td>{{inner_dict.usermodifiedby}}</td>
+                    <td>{{inner_dict.timestamp}}</td>
+                    <td><a href="{% url 'edit_object' inner_dict.mod_id %}">edit</a> <br>
+                        <a href="{% url 'delete_object' inner_dict.mod_id %}">Delete</a> <br>
+                        {% if inner_dict.status == True %}
+                        <a href="{% url 'deactivate_item' inner_dict.mod_id %}">Deactivate</a>
+                        {% else %}
+                        <a href="{% url 'activate_item' inner_dict.mod_id %}">Activate</a>
+                        {% endif %}
+                        </tr>
+                {% endfor %}
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+        <div class="text-center mt-4">
+            <a href="/addform"><span class="edit-button">Add Pricing Module</span></a> <br>
+        </div>
+    </div>
+
+    <div class="popup" id="editPopup">
+        <h2>Edit Details</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        <br>
+        <!-- Add more input fields for other columns -->
+        <button id="saveButton" class="btn btn-primary">Save</button>
+        <button id="cancelButton" class="btn btn-secondary">Cancel</button>
+    </div>
+
+    <!-- Include Bootstrap JS (optional for popups) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

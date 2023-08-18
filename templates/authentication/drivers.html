@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Pricing Module</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="checkbox"]{
+            width: 10%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .weekday{
+            display:flex;flex-direction: row;align-items: center;text-align: center;
+        }
+        .box{
+            display: flex;flex-direction: row;align-items: center;text-align: center;justify-content:space-between;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Please Add The Distance From The Drivers Or Users Page</h2>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="box">
+                <div class="form-group">
+                    <label for="dbp_price">Total Distance</label>
+                    <input type="text" id="total_dist" name="total_dist" placeholder="Distance" Required>
+                </div>
+                <div class="form-group">
+                    <label for="day">Day Of The Week</label>
+                    <input type="text" id="day" name="day" placeholder="(eg. Monday ,Tuesday)" Required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="time">Total Time Taken For The Journey in Hours</label>
+                <input type="text" id="time" name="time" placeholder="(eg. 1 , 2 ,3 )" Required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name5">Waiting Time (min)</label>
+                <input type="text" id="waiting_time" name="waiting_time" placeholder="Waiting Time" Required>
+            </div>
+            
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+  
+</body>
+</html>

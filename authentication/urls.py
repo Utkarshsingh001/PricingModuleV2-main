@@ -34,5 +34,6 @@ urlpatterns = [
      path('download/', views.download_page, name='download_page'),
     path('generate-and-download-csv/', views.generate_and_download_csv, name='generate_and_download_csv'),
     path('download-combined-csv/', views.download_combined_csv, name='download_combined_csv'),
+    path('column_selection/', views.column_selection, name='column_selection'),
 ]
 

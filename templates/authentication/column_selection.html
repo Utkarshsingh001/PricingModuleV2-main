@@ -1,0 +1,17 @@
+<!-- column_selection.html -->
+<html>
+<header></header>
+<body>
+    
+
+<form method="post" action="{% url 'generate_and_download_csv' %}">
+    {% csrf_token %}
+    {% for column in columns %}
+      <input type="checkbox" name="selected_columns" value="{{ column.name }}">
+      <label>{{ column.name }}</label><br>
+    {% endfor %}
+    <button type="submit">Download CSV</button>
+  </form>
+</body>
+
+</html>

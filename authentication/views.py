@@ -332,24 +332,18 @@ def calculation_price_api(request):
     print(final_pricing)
     return Response({'Pricing' , final_pricing})
 
-def fetch_data(start_index, chunk_size):
-    return Pricing_Module.objects.all()[start_index:start_index + chunk_size]
+def fetch_data(request,start_index, chunk_size):
+    global selected_columns 
+    selected_columns = request.POST.getlist('selected_columns')
+    return Pricing_Module.objects.only(*selected_columns)[start_index:start_index + chunk_size]
 
 def generate_csv_chunk(data):
     rows = []
+    dict ={}
     for row in data:
-        rows.append({
-            'mod_id': row.mod_id,
-            'dbp_price': row.dbp_price,
-            'dbp_km':row.dbp_km,
-            'dap':row.dap,
-            'waiting_charge':row.waiting_charge,
-            'waiting_time':row.waiting_time,
-            'status':row.status,
-            'usermodifiedby':row.usermodifiedby,
-            'created_at':row.created_at
-            # Add more fields as needed
-        })
+        for column in selected_columns:
+            dict[column] = getattr(row,column)
+        rows.append(dict)
     return rows
 
 def generate_csv_file(data, filename):
@@ -403,7 +397,7 @@ def generate_and_download_csv(request):
     clean_temp_directory(temp_dir)  # Clean the directory before generating CSVs
 
     for start_index in range(0, total_rows, chunk_size):
-        data = fetch_data(start_index, chunk_size)
+        data = fetch_data(request,start_index, chunk_size)
         csv_data = generate_csv_chunk(data)
 
         filename = os.path.join(temp_dir, f'data_{start_index}.csv')

@@ -393,7 +393,7 @@ def download_combined_csv(request):
         return response
 
 def generate_and_download_csv(request):
-    chunk_size = 2
+    chunk_size = 3000
     total_rows = Pricing_Module.objects.count()
 
     # Create a temporary directory to store CSV files

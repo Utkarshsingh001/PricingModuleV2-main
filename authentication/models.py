@@ -29,3 +29,12 @@ class TMF(models.Model):
     def __str__(self):
         return f"{self.mod_id} {self.hour} {self.factor}"
 
+class Ride(models.Model):
+    mod_id = models.AutoField(primary_key=True)
+    total_kms = models.FloatField(default=True)
+    total_time = models.FloatField(default=True)
+    total_charges = models.FloatField(default=True)
+    day = models.CharField(max_length=20)
+    created_at = models.DateTimeField(editable=True,auto_now_add=True)
+
+

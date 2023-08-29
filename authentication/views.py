@@ -1,13 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404, render , redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate , login , logout
 from datetime import datetime
 import math
-from authentication.models import Pricing_Module, Week_Table ,TMF
+from authentication.models import Pricing_Module, Week_Table ,TMF , Ride
 import os
 import csv
 import zipfile
@@ -111,7 +111,7 @@ def dashboard(request):
         fullobj[f"{item.mod_id}"]=objdict
     #active/nonactive
     print(activequeue)
-    
+    print(fullobj)
     return render(request , 'authentication/dashboard.html',{"fullobj":fullobj})
 
 def addform(request):
@@ -138,6 +138,7 @@ def addform(request):
         for item1,item2 in zip(TMF_time, TMF_factor):
             secondinstances.append(TMF(mod_id = new_instance, hour = item1, factor = item2))
         TMF.objects.bulk_create(secondinstances)
+   
         return redirect('dashboard')
     return render(request , "authentication/addform.html")
 
@@ -242,6 +243,7 @@ def activate_item(request,pk):
 def drivers(request):
     if request.method == "POST":
         foundid = 0
+        global totaldistance
         totaldistance = float(request.POST['total_dist'])
         day_of_week =request.POST['day']
         total_time = float(request.POST['time'])
@@ -280,7 +282,13 @@ def drivers(request):
         quotient = waiting_total_time // waiting_time
         quotient -= 1
         final_pricing = ( dbp_price + (Dn * dap) + (total_time * tmfvalue ) + waiting_charge*quotient) 
-        print(f"The Final Pricing is {final_pricing}")
+        #saving the cost of the ride or history
+        new_instance = Ride()
+        new_instance.total_kms = totaldistance
+        new_instance.total_time = total_time
+        new_instance.day = day_of_week
+        new_instance.total_charges = final_pricing
+        new_instance.save()
         
     return render(request , "authentication/drivers.html")
 
@@ -412,3 +420,56 @@ def column_selection(request):
     fields = [field for field in Pricing_Module._meta.get_fields() if not field.is_relation]
     
     return render(request, 'authentication/column_selection.html', {'columns': fields})
+
+@api_view(['GET'])
+def dashboard_data_api(request):
+    query_results = Pricing_Module.objects.all()
+    fullobj={}
+    activequeue=[]
+    for item in query_results:
+        objdict={
+            "mod_id":item.mod_id,
+            "dbp_price":item.dbp_price,
+            "dbp_km":item.dbp_km,
+            "dap":item.dap,
+            "waiting_time":item.waiting_time,
+            "waiting_charge":item.waiting_charge,
+            "status":item.status,
+            "usermodifiedby":item.usermodifiedby,
+            "timestamp":item.created_at,
+            }
+        if item.status == True:
+            activequeue.append(item.mod_id)
+        days = Week_Table.objects.filter(mod_id=item.mod_id)
+        dayarray=[]
+        for day in days:
+            dayarray.append(day.weekday)
+        objdict["weekdays"]=dayarray
+        tmf = TMF.objects.filter(mod_id=item.mod_id)
+        timearray =[]
+        timedictionary={}
+        for t in tmf:
+            timedictionary={
+                t.hour:t.factor,
+            }
+            timearray.append(timedictionary)
+        objdict["TMF"] = timearray
+        fullobj[f"{item.mod_id}"]=objdict
+    #active/nonactive
+    fullobj[f"{item.mod_id}"] = objdict
+    return JsonResponse(fullobj)
+
+def rides_data_api(request):
+    rides_data = Ride.objects.all()
+    data = [
+        {
+            "ride_id": ride.mod_id,
+            "total_kms": ride.total_kms,
+            "total_time": ride.total_time,
+            "day": ride.day,
+            "total_charges": ride.total_charges,
+            "timestamp":ride.created_at
+        }
+        for ride in rides_data
+    ]
+    return JsonResponse(data, safe=False)

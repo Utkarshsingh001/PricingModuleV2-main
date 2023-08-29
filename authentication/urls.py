@@ -35,5 +35,8 @@ urlpatterns = [
     path('generate-and-download-csv/', views.generate_and_download_csv, name='generate_and_download_csv'),
     path('download-combined-csv/', views.download_combined_csv, name='download_combined_csv'),
     path('column_selection/', views.column_selection, name='column_selection'),
+    path('api/dashboard-data/', views.dashboard_data_api, name='dashboard-data-api'),
+    path('api/rides-data/', views.rides_data_api, name='rides-data-api'),
+
 ]
 
